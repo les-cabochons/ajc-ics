@@ -1,22 +1,9 @@
-// Bundles the plugin and ical.js into dist/plugin.js. Ajour installs only
-// plugin.json and dist/, so runtime dependencies must be inside the bundle.
+// Builds dist/plugin.js, the entrypoint plugin.json names. See bundle-options.mjs.
 import { rm } from "node:fs/promises";
 import { build, context } from "esbuild";
+import { bundleOptions } from "./bundle-options.mjs";
 
-const options = {
-  entryPoints: ["src/plugin.ts"],
-  outfile: "dist/plugin.js",
-  bundle: true,
-  platform: "node",
-  format: "esm",
-  target: "node22",
-  legalComments: "eof",
-  // ical.js is MPL-2.0: name it and its source in the bundle.
-  banner: {
-    js: "/*! ajc-ics, MIT, https://github.com/les-cabochons/ajc-ics. Bundles ical.js 2.2.1, MPL-2.0 (https://mozilla.org/MPL/2.0/), source at https://github.com/kewisch/ical.js. */",
-  },
-  logLevel: "info",
-};
+const options = { ...bundleOptions, outfile: "dist/plugin.js", logLevel: "info" };
 
 await rm("dist", { recursive: true, force: true });
 
